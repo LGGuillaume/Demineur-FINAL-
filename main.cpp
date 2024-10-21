@@ -11,18 +11,15 @@ int main() {
     char continueGame = 'Y';
     char restartGame = 'Y';
 
-    // Initialisation du jeu et calcul des bombes adjacentes
     g.initializeGame(lines, columns);
     g.adjacentBombs();
 
     while (toupper(continueGame) == 'Y' && toupper(restartGame) == 'Y')
     {
-        g.displayBoard(lines, columns);  // Afficher le plateau
+        g.displayBoard(lines, columns);
 
-        // Demander la position de l'utilisateur
         g.userPosition(enterLine, enterColumn, lines, columns);
 
-        // Vérifier si l'utilisateur a touché une bombe
         if (g.hasHitBomb(enterLine, enterColumn))
         {
             std::cout << std::endl;
@@ -32,7 +29,7 @@ int main() {
             if (toupper(restartGame) == 'Y')
             {
                 std::cout << std::endl;
-                g.initializeGame(lines, columns); // Réinitialiser le jeu
+                g.initializeGame(lines, columns);
                 continue;
             }
             else
@@ -41,14 +38,13 @@ int main() {
             }
         }
 
-        g.displayBoard(lines, columns); // Afficher à nouveau le plateau après le mouvement
+        g.displayBoard(lines, columns);
 
-        // Demander à l'utilisateur s'il souhaite continuer à jouer
         std::cout << std::endl;
         std::cout << "Do you want to continue? (Y/N): ";
+        std::cout << std::endl;
         std::cin >> continueGame;
 
-        // Validation de l'entrée utilisateur
         while (toupper(continueGame) != 'Y' && toupper(continueGame) != 'N')
         {
             std::cout << "Error. Yes or No ?: ";
@@ -56,7 +52,6 @@ int main() {
         }
     }
 
-    // Message de fin de jeu
     if (toupper(continueGame) == 'N' || toupper(restartGame) == 'N')
     {
         std::cout << std::endl;
