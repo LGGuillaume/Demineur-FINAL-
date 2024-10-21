@@ -125,6 +125,8 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
         enterColumn = toupper(userInput[0]);  // input[0] = la lettre
         enterLine = std::stoi(userInput.substr(1));  // convertit le reste (donc après input[0]) en entier (ex : A10 -> 10)
 
+        flag();
+
         int columnIndex = enterColumn - 'A';
         if (enterLine >= 1 && enterLine <= lines_ && columnIndex >= 0 && columnIndex < columns_)
         {
@@ -211,5 +213,18 @@ void Game::adjacentBombs()
                 board[lines_][columns_] = '0' + bombCount;  // convertit le nombre de bombe en caractère
             }
         }
+    }
+}
+
+void Game::flag()
+{
+    char choice = 'Y';
+
+    std::cout << "Do you want to put a flag?";
+    std::cin >> choice;
+
+    if (toupper(choice) == 'Y')
+    {
+        std::cout << "<";
     }
 }
