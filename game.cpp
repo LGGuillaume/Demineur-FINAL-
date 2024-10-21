@@ -5,9 +5,9 @@
 #include <ctime>
 #include "game.h"
 
-Game::~Game() 
+Game::~Game()
 {
-    for (int i = 0; i < lines; ++i) 
+    for (int i = 0; i < lines; ++i)
     {
         delete[] board[i];
     }
@@ -29,17 +29,17 @@ void Game::initializeGame(int& lines_, int& columns_)
     case 1:
         lines_ = 10;
         columns_ = 10;
-        numBombs = 15;
+        numBombs = 25;
         break;
     case 2:
         lines_ = 20;
         columns_ = 15;
-        numBombs = 30;
+        numBombs = 40;
         break;
     case 3:
         lines_ = 25;
         columns_ = 20;
-        numBombs = 35;
+        numBombs = 50;
         break;
     default:
         std::cout << std::endl << "--- BUG ---" << std::endl;
@@ -94,13 +94,13 @@ void Game::displayBoard(int lines_, int columns_)
         std::cout << std::setw(2) << (i + 1);
         for (int j = 0; j < columns_; ++j)
         {
-            if (revealed[i][j] == 'X')  // Case révélée
+            if (revealed[i][j] == 'X')
             {
-                std::cout << std::setw(3) << board[i][j];  // Affiche soit un chiffre, soit un 'B'
+                std::cout << std::setw(3) << board[i][j];
             }
             else
             {
-                std::cout << std::setw(3) << "[ ]";  // Case non révélée
+                std::cout << std::setw(3) << "[ ]";
             }
         }
         std::cout << std::endl;
@@ -176,38 +176,38 @@ bool Game::hasHitBomb(int enterLine, char enterColumn)
     return board[enterLine - 1][columnIndex] == 'B'; // vérifie si c'est une bombe
 }
 
-void Game::adjacentBombs() 
+void Game::adjacentBombs()
 {
-	for (int lines_ = 0; lines < lines; ++lines) 
+    for (int lines_ = 0; lines_ < lines; ++lines_)
     {
-		for (int columns_ = 0; columns_ < columns; ++columns_) 
+        for (int columns_ = 0; columns_ < columns; ++columns_)
         {
-            if (board[lines_][columns_] == 'B') 
+            if (board[lines_][columns_] == 'B')
             {
                 continue;
             }
             int bombCount = 0;
 
             // là on vérifie les cases adjacentes
-			for (int i = -1; i <= 1; ++i) 
+            for (int i = -1; i <= 1; ++i)
             {
-				for (int j = -1; j <= 1; ++j) 
+                for (int j = -1; j <= 1; ++j)
                 {
-					int adjLines = lines_ + i;
-					int adjColumns = columns_ + j;  
+                    int adjLines = lines_ + i;
+                    int adjColumns = columns_ + j;
 
                     // check si les cases sont dans le plateau
-                    if (adjLines >= 0 && adjLines < lines && adjColumns >= 0 && adjColumns < columns) 
+                    if (adjLines >= 0 && adjLines < lines && adjColumns >= 0 && adjColumns < columns)
                     {
-                        if (board[adjLines][adjColumns] == 'B') 
+                        if (board[adjLines][adjColumns] == 'B')
                         {
-							++bombCount;
+                            ++bombCount;
                         }
                     }
                 }
             }
             if (bombCount > 0) // stock le nombre de bombe
-            { 
+            {
                 board[lines_][columns_] = '0' + bombCount;  // convertit le nombre de bombe en caractère
             }
         }
