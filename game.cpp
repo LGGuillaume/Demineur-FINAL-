@@ -94,11 +94,15 @@ void Game::displayBoard(int lines_, int columns_)
         std::cout << std::setw(2) << (i + 1);
         for (int j = 0; j < columns_; ++j)
         {
-            if (revealed[i][j] == 'X')
+            if (revealed[i][j] == 'X')  // case révélée
             {
                 std::cout << std::setw(3) << board[i][j];
             }
-            else
+            else if (revealed[i][j] == 'F')  // case avec un drapeau
+            {
+                std::cout << std::setw(3) << "F";
+            }
+            else  // case non révélée
             {
                 std::cout << std::setw(3) << "[ ]";
             }
@@ -125,24 +129,47 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
         enterColumn = toupper(userInput[0]);  // input[0] = la lettre
         enterLine = std::stoi(userInput.substr(1));  // convertit le reste (donc après input[0]) en entier (ex : A10 -> 10)
 
-        flag();
-
         int columnIndex = enterColumn - 'A';
         if (enterLine >= 1 && enterLine <= lines_ && columnIndex >= 0 && columnIndex < columns_)
         {
-            revealed[enterLine - 1][columnIndex] = 'X';
+            char action;
+            std::cout << "Flag(F) or Reveal(R) ? ";
+            std::cin >> action;
+            action = toupper(action);
 
-            if (board[enterLine - 1][columnIndex] == 'B')
+            if (action == 'R')
+            {
+                revealed[enterLine - 1][columnIndex] = 'X';
+
+                if (board[enterLine - 1][columnIndex] == 'B')
+                {
+                    std::cout << std::endl;
+                    std::cout << "You hit a bomb!" << std::endl;
+                    std::cout << std::endl;
+                    std::cout << "------------------------- GAME OVER -------------------------";
+                    std::cout << std::endl;
+                    break;
+                }
+
+                std::cout << "You revealed: " << enterColumn << enterLine << std::endl;
+            }
+            else if (action == 'F')
+            {
+                flag(enterLine, enterColumn);
+            }
+            else if (action != 'F' || action != 'R')
             {
                 std::cout << std::endl;
-                std::cout << "You hit a bomb!" << std::endl;
-                std::cout << std::endl;
-                std::cout << "------------------------- GAME OVER -------------------------";
-                std::cout << std::endl;
+                std::cout << "Hmm, ok I'll ask again.." << std::endl;
+                continue;
+            }
+
+            if (checkWin())
+            {
+                std::cout << "Congratulations ! You WIN" << std::endl;
                 break;
             }
 
-            std::cout << "You entered: " << enterColumn << enterLine << std::endl;
             std::cout << std::endl;
             break;
         }
@@ -216,15 +243,40 @@ void Game::adjacentBombs()
     }
 }
 
-void Game::flag()
+void Game::flag(int enterLine, char enterColumn)
 {
-    char choice = 'Y';
+    int columnIndex = enterColumn - 'A';
 
-    std::cout << "Do you want to put a flag?";
-    std::cin >> choice;
-
-    if (toupper(choice) == 'Y')
+    if (revealed[enterLine - 1][columnIndex] == 'F')
     {
-        std::cout << "<";
+        revealed[enterLine - 1][columnIndex] = ' ';
     }
+    else if (revealed[enterLine - 1][columnIndex] == ' ')
+    {
+        revealed[enterLine - 1][columnIndex] = 'F';
+    }
+}
+
+bool Game::checkWin() 
+{
+    int revealedCount = 0;
+
+    for (int i = 0; i < lines; ++i)
+	{
+		for (int j = 0; j < columns; ++j)
+		{
+			if (revealed[i][j] == 'X' && revealed[i][j] != 'B')
+			{
+				++revealedCount;
+			}
+		}
+	}
+
+    int totalNoBomb = (lines * columns) - numBombs;
+    if (revealedCount == totalNoBomb)
+    {
+        return true;
+    }
+
+ return false;
 }
