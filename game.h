@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-struct Game 
+struct Game
 {
     int lines;
     int columns;
@@ -18,6 +18,8 @@ struct Game
     void placeBombs();
     bool hasHitBomb(int enterLine, char enterColumn);
     void adjacentBombs();
+    void flag(int enterLine, char enterColumn);
+	bool checkWin();
 
 };
 
