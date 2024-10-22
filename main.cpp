@@ -8,13 +8,12 @@ int main() {
     int columns = 0;
     int enterLine = 0;
     char enterColumn = 0;
-    char continueGame = 'Y';
     char restartGame = 'Y';
 
     g.initializeGame(lines, columns);
     g.adjacentBombs();
 
-    while (toupper(continueGame) == 'Y' && toupper(restartGame) == 'Y')
+    while (toupper(restartGame) == 'Y')
     {
         g.displayBoard(lines, columns);
 
@@ -36,23 +35,15 @@ int main() {
             {
                 break;
             }
-        }
-
-        g.displayBoard(lines, columns);
-
-        std::cout << std::endl;
-        std::cout << "Do you want to continue? (Y/N): ";
-        std::cout << std::endl;
-        std::cin >> continueGame;
-
-        while (toupper(continueGame) != 'Y' && toupper(continueGame) != 'N')
-        {
-            std::cout << "Error. Yes or No ?: ";
-            std::cin >> continueGame;
+            while (toupper(restartGame) != 'N')
+            {
+                std::cout << "Error. Yes or No ?: ";
+                std::cin >> restartGame;
+            }
         }
     }
 
-    if (toupper(continueGame) == 'N' || toupper(restartGame) == 'N')
+    if (toupper(restartGame) == 'N')
     {
         std::cout << std::endl;
         std::cout << "Thank you for playing!";
