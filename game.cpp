@@ -10,13 +10,16 @@ Game::~Game()
     for (int i = 0; i < lines; ++i)
     {
         delete[] board[i];
+	delete[] revealed[i];
     }
     delete[] board;
+    delete[] revealed;
 }
 
 void Game::initializeGame(int& lines_, int& columns_)
 {
     int level = 0;
+    srand(time(NULL));
 
     std::cout << "--- Welcome to Minesweeper ---" << std::endl;
     std::cout << std::endl;
@@ -137,6 +140,12 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
             std::cin >> action;
             action = toupper(action);
 
+	    if (revealed[enterLine - 1][columnIndex] == 'F')
+{
+    std::cout << "This position is flagged! Remove the flag first if you want to reveal it." << std::endl;
+    continue;  // Empêche la révélation de la bombe marquée par un drapeau
+}
+		
             if (action == 'R')
             {
                 revealed[enterLine - 1][columnIndex] = 'X';
@@ -157,7 +166,7 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
             {
                 flag(enterLine, enterColumn);
             }
-            else if (action != 'F' || action != 'R')
+            else if (action != 'F' && action != 'R')
             {
                 std::cout << std::endl;
                 std::cout << "Hmm, ok I'll ask again.." << std::endl;
@@ -183,7 +192,6 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
 
 void Game::placeBombs()
 {
-    srand(time(NULL));
     int placedBombs = 0;
 
     while (placedBombs < numBombs)
@@ -260,6 +268,7 @@ void Game::flag(int enterLine, char enterColumn)
 bool Game::checkWin() 
 {
     int revealedCount = 0;
+    int flaggedBombs = 0;
 
     for (int i = 0; i < lines; ++i)
 	{
@@ -269,11 +278,15 @@ bool Game::checkWin()
 			{
 				++revealedCount;
 			}
+			if (revealed[i][j] == 'F' && board[i][j] == 'B')
+			{
+				++flaggedBombs;
+			}
 		}
 	}
 
     int totalNoBomb = (lines * columns) - numBombs;
-    if (revealedCount == totalNoBomb)
+    if (revealedCount == totalNoBomb && flaggedBombs == numBombs)
     {
         return true;
     }
