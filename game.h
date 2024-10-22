@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-struct Game
+struct Game // Struct with all the functions, variables and constructor
 {
     int lines;
     int columns;
@@ -20,7 +20,7 @@ struct Game
     void adjacentBombs();
     void flag(int enterLine, char enterColumn);
 	bool checkWin();
-
+    char getRevealed(int line, int column);
 };
 
 #endif
