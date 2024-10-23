@@ -95,7 +95,7 @@ void Game::displayBoard(int lines_, int columns_) // Function that display the b
 
     for (int i = 0; i < lines_; ++i)
     {
-        std::cout << std::setw(2) << (i + 1);
+        std::cout << std::setw(2) << (i + 1) << "|";
         for (int j = 0; j < columns_; ++j)
         {
             if (revealed[i][j] == 'X')  // Revealed cell
