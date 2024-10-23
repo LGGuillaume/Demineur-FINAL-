@@ -30,18 +30,18 @@ void Game::initializeGame(int& lines_, int& columns_) // Main Game
     {
     case 1:
         lines_ = 5;
-        columns_ = 5;
+        columns_ = 10;
         numBombs = 10;
 
         break;
     case 2:
         lines_ = 10;
-        columns_ = 5;
+        columns_ = 10;
         numBombs = 20;
         break;
     case 3:
-        lines_ = 15;
-        columns_ = 10;
+        lines_ = 10;
+        columns_ = 15;
         numBombs = 30;
         break;
     default:
@@ -86,7 +86,7 @@ void Game::initializeGame(int& lines_, int& columns_) // Main Game
 
 void Game::displayBoard(int lines_, int columns_) // Function that display the board
 {
-    std::cout << " ";
+    std::cout << "  ";
     for (char letter = 'A'; letter < 'A' + columns_; ++letter)
     {
         std::cout << std::setw(3) << letter;
@@ -100,11 +100,11 @@ void Game::displayBoard(int lines_, int columns_) // Function that display the b
         {
             if (revealed[i][j] == 'X')  // Revealed cell
             {
-                std::cout << std::setw(3) << board[i][j];
+                std::cout << " " << board[i][j] << " ";
             }
             else if (revealed[i][j] == 'F')  // Cell is flagged
             {
-                std::cout << std::setw(3) << "F";
+                std::cout << " F ";
             }
             else  // Cell is not revealed
             {
