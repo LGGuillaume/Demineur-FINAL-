@@ -17,10 +17,12 @@ struct Game // Struct with all the functions, variables and constructor
     void userPosition(int& enterLine, char& enterColumn, int lines, int columns);
     void placeBombs();
     bool hasHitBomb(int enterLine, char enterColumn);
-    void adjacentBombs();
+    int adjacentBombs();
     void flag(int enterLine, char enterColumn);
-	bool checkWin();
+    bool checkWin();
     char getRevealed(int line, int column);
+    void floodfill(int& lines_, int& columns_);
+
 };
 
 #endif
