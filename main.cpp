@@ -1,7 +1,7 @@
 #include <iostream>
 #include "game.h"
 
-int main() 
+int main()
 {
     Game g;
 
@@ -14,13 +14,13 @@ int main()
     g.initializeGame(lines, columns);
 
     // Main Game Loop
-    while (toupper(restartGame) == 'Y') 
+    while (toupper(restartGame) == 'Y')
     {
         g.displayBoard(lines, columns);
         g.userPosition(enterLine, enterColumn, lines, columns);
 
         // Check only after reveal
-        if (g.getRevealed(enterLine - 1, enterColumn - 'A') == 'X' && g.hasHitBomb(enterLine, enterColumn)) 
+        if (g.getRevealed(enterLine - 1, enterColumn - 'A') == 'X' && g.hasHitBomb(enterLine, enterColumn))
         {
             std::cout << std::endl;
             std::cout << "You hit a bomb!" << std::endl;
@@ -29,18 +29,18 @@ int main()
             std::cout << "Restart? (Y/N): ";
             std::cin >> restartGame;
 
-            if (toupper(restartGame) == 'Y') 
+            if (toupper(restartGame) == 'Y')
             {
                 std::cout << std::endl;
                 g.initializeGame(lines, columns);
                 continue;
             }
-            else 
+            else
             {
                 break;
             }
 
-            while (toupper(restartGame) != 'N') 
+            while (toupper(restartGame) != 'N')
             {
                 std::cout << "Error. Yes or No ?: ";
                 std::cin >> restartGame;
@@ -48,26 +48,26 @@ int main()
         }
 
         // Check for victory
-        if (g.checkWin()) 
+        if (g.checkWin())
         {
             std::cout << "Congratulations! You've won!" << std::endl;
             std::cout << "Restart? (Y/N): ";
             std::cin >> restartGame;
 
-            if (toupper(restartGame) == 'Y') 
+            if (toupper(restartGame) == 'Y')
             {
                 std::cout << std::endl;
                 g.initializeGame(lines, columns);
                 continue;
             }
-            else 
+            else
             {
                 break;
             }
         }
     }
 
-    if (toupper(restartGame) == 'N') 
+    if (toupper(restartGame) == 'N')
     {
         std::cout << std::endl;
         std::cout << "Thank you for playing!";
