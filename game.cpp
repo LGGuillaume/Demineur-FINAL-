@@ -134,6 +134,8 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
         enterLine = std::stoi(userInput.substr(1));
 
         int columnIndex = enterColumn - 'A';
+        int lineIndex = enterLine - 1;
+
         if (enterLine >= 1 && enterLine <= lines_ && columnIndex >= 0 && columnIndex < columns_)
         {
             char action;
@@ -144,15 +146,15 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
             if (action == 'R')
             {
                 // If the cell is flagged, the player cannot reveal it
-                if (revealed[enterLine - 1][columnIndex] == 'F')
+                if (revealed[lineIndex][columnIndex] == 'F')
                 {
                     std::cout << "You cannot reveal a flagged position. Remove the flag first." << std::endl;
                     continue;
                 }
 
-                revealed[enterLine - 1][columnIndex] = 'X';
+                revealed[lineIndex][columnIndex] = 'X';
 
-                if (board[enterLine - 1][columnIndex] == 'B')
+                if (board[lineIndex][columnIndex] == 'B')
                 {
                     break;
                 }
@@ -201,21 +203,24 @@ void Game::placeBombs() // Function that place bombs
 bool Game::hasHitBomb(int enterLine, char enterColumn) // Function that return true if the revealed cell is a bomb
 {
     int columnIndex = enterColumn - 'A';
+    int lineIndex = enterLine - 1;
 
-    if (revealed[enterLine - 1][columnIndex] == 'F') // If the cell is a flag, it will not count as 'hasHitBomb'
+    if (revealed[lineIndex][columnIndex] == 'F') // If the cell is a flag, it will not count as 'hasHitBomb'
     {
         return false;
     }
-    return board[enterLine - 1][columnIndex] == 'B'; // Checking if there's a bomb
+    return board[lineIndex][columnIndex] == 'B'; // Checking if there's a bomb
 }
 
-void Game::adjacentBombs() // Function to check the adjacent cells
+int Game::adjacentBombs() // Function to check the adjacent cells
 {
+    int totalBombCount = 0;
+
     for (int lines_ = 0; lines_ < lines; ++lines_)
     {
         for (int columns_ = 0; columns_ < columns; ++columns_)
         {
-            if (board[lines_][columns_] == 'B') // If the cell is a bomb, it skip to check the adjacent cells
+            if (board[lines][columns] == 'B') // If the cell is a bomb, skip checking adjacent cells
             {
                 continue;
             }
@@ -232,32 +237,37 @@ void Game::adjacentBombs() // Function to check the adjacent cells
                     // Checking if the cells are in the board
                     if (adjLines >= 0 && adjLines < lines && adjColumns >= 0 && adjColumns < columns)
                     {
-                        if (board[adjLines][adjColumns] == 'B') // If the cell is a bomb, it adds +1 to count the number of bomb
+                        if (board[adjLines][adjColumns] == 'B') // If the adjacent cell is a bomb, it adds +1 to count the number of bomb
                         {
                             ++bombCount;
                         }
                     }
                 }
             }
-            if (bombCount > 0) // Stock the number of bombs
+
+            if (bombCount > 0) // Store the number of adjacent bombs
             {
-                board[lines_][columns_] = '0' + bombCount;  // Converts bomb number to character
+                board[lines][columns] = '0' + bombCount;  // Convert bomb count to character
             }
+
+            totalBombCount += bombCount;
         }
     }
-}
 
+    return totalBombCount;
+}
 void Game::flag(int enterLine, char enterColumn) // Function to put a flag
 {
     int columnIndex = enterColumn - 'A';
+    int lineIndex = enterLine - 1;
 
-    if (revealed[enterLine - 1][columnIndex] == 'F')
+    if (revealed[lineIndex][columnIndex] == 'F')
     {
-        revealed[enterLine - 1][columnIndex] = ' ';  // Put the cell back to unrevealed state
+        revealed[lineIndex][columnIndex] = ' ';  // Put the cell back to unrevealed state
     }
-    else if (revealed[enterLine - 1][columnIndex] == ' ')  // Only if the cell is not revealed
+    else if (revealed[lineIndex][columnIndex] == ' ')  // Only if the cell is not revealed
     {
-        revealed[enterLine - 1][columnIndex] = 'F';  // Put a flag
+        revealed[lineIndex][columnIndex] = 'F';  // Put a flag
     }
 }
 
@@ -293,4 +303,25 @@ bool Game::checkWin() // Function for win condition
 char Game::getRevealed(int line, int column) // Function for main.cpp
 {                                            // Used to get revealed[i][j]'s board
     return revealed[line][column];
+}
+
+void Game::floodfill(int& enterLine, int& enterColumn)
+{
+    if (enterLine < 0 || enterLine >= lines || enterColumn < 0 || enterColumn >= columns) {
+        return;
+    }
+    revealed[enterLine][enterColumn] = true;
+
+    int bombesAdj = adjacentBombs();
+    if (bombesAdj == 0) 
+    {
+        // Révéler les cases adjacentes
+        for (int i = enterLine - 1; i <= enterLine + 1; ++i) 
+        {
+            for (int j = enterColumn - 1; j <= enterColumn + 1; ++j) 
+            {
+                revealed(i, j);
+            }
+        }
+    }
 }
