@@ -154,6 +154,11 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
 
                 revealed[lineIndex][columnIndex] = 'X';
 
+                if (board[lineIndex][columnIndex] == ' ')
+                {
+                    floodfill(lines, columns);
+                }
+
                 if (board[lineIndex][columnIndex] == 'B')
                 {
                     break;
@@ -220,7 +225,7 @@ int Game::adjacentBombs() // Function to check the adjacent cells
     {
         for (int columns_ = 0; columns_ < columns; ++columns_)
         {
-            if (board[lines][columns] == 'B') // If the cell is a bomb, skip checking adjacent cells
+            if (board[lines_][columns_] == 'B') // If the cell is a bomb, skip checking adjacent cells
             {
                 continue;
             }
@@ -247,7 +252,7 @@ int Game::adjacentBombs() // Function to check the adjacent cells
 
             if (bombCount > 0) // Store the number of adjacent bombs
             {
-                board[lines][columns] = '0' + bombCount;  // Convert bomb count to character
+                board[lines_][columns_] = '0' + bombCount;  // Convert bomb count to character
             }
 
             totalBombCount += bombCount;
@@ -305,22 +310,23 @@ char Game::getRevealed(int line, int column) // Function for main.cpp
     return revealed[line][column];
 }
 
-void Game::floodfill(int& enterLine, int& enterColumn)
+void Game::floodfill(int& lines_, int& columns_) // Floodfill Function
 {
-    if (enterLine < 0 || enterLine >= lines || enterColumn < 0 || enterColumn >= columns) {
+    if (lines_ < 0 || lines_ >= lines || columns_ < 0 || columns_ >= columns) 
+    {
         return;
     }
-    revealed[enterLine][enterColumn] = true;
+    revealed[lines_][columns_] = true;
 
     int bombesAdj = adjacentBombs();
-    if (bombesAdj == 0) 
+    if (bombesAdj == 0)
     {
-        // Révéler les cases adjacentes
-        for (int i = enterLine - 1; i <= enterLine + 1; ++i) 
+        // Reveal adjacent cells
+        for (int i = lines - 1; i <= lines + 1; ++i)
         {
-            for (int j = enterColumn - 1; j <= enterColumn + 1; ++j) 
+            for (int j = columns - 1; j <= columns + 1; ++j)
             {
-                revealed(i, j);
+                floodfill(i, j);
             }
         }
     }
