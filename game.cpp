@@ -83,7 +83,6 @@ void Game::initializeGame(int& lines_, int& columns_) // Main Game
     }
 }
 
-
 void Game::displayBoard(int lines_, int columns_) // Function that display the board
 {
     std::cout << "  ";
@@ -152,12 +151,7 @@ void Game::userPosition(int& enterLine, char& enterColumn, int lines_, int colum
                     continue;
                 }
 
-                revealed[lineIndex][columnIndex] = 'X';
-
-                if (board[lineIndex][columnIndex] == ' ')
-                {
-                    floodfill(lines, columns);
-                }
+                floodfill(lineIndex, columnIndex);
 
                 if (board[lineIndex][columnIndex] == 'B')
                 {
@@ -261,6 +255,20 @@ int Game::adjacentBombs() // Function to check the adjacent cells
 
     return totalBombCount;
 }
+
+int Game::getNumberOfAdjacentLivingCell2(int cellRow, int cellCol)
+{
+    int nbNeighboors=0;
+
+    for (int row = std::max(cellRow - 1, 0); row <= std::min(cellRow + 1, lines - 1); ++row)
+        for (int col = std::max(cellCol - 1, 0); col <= std::min(cellCol + 1, columns - 1); ++col)
+            if (board[row][col] == 'B')
+                nbNeighboors++;
+
+
+    return nbNeighboors;
+}
+
 void Game::flag(int enterLine, char enterColumn) // Function to put a flag
 {
     int columnIndex = enterColumn - 'A';
@@ -305,28 +313,33 @@ bool Game::checkWin() // Function for win condition
     return false;
 }
 
-char Game::getRevealed(int line, int column) // Function for main.cpp
+char Game::getRevealed(int lines, int columns) // Function for main.cpp
 {                                            // Used to get revealed[i][j]'s board
-    return revealed[line][column];
+    return revealed[lines][columns];
 }
 
-void Game::floodfill(int& lines_, int& columns_) // Floodfill Function
+void Game::floodfill(int lines_, int columns_) // Floodfill Function
 {
-    if (lines_ < 0 || lines_ >= lines || columns_ < 0 || columns_ >= columns) 
+    if (lines_ < 0 || lines_ >= lines || columns_ < 0 || columns_ >= columns)
     {
         return;
     }
-    revealed[lines_][columns_] = true;
+    if (revealed[lines_][columns_] == 'X')
+    {
+        return;
+    }
 
-    int bombesAdj = adjacentBombs();
+    revealed[lines_][columns_] = 'X';
+
+    int bombesAdj = getNumberOfAdjacentLivingCell2(lines_, columns_);
     if (bombesAdj == 0)
     {
-        // Reveal adjacent cells
-        for (int i = lines - 1; i <= lines + 1; ++i)
+        // Révélez les cases adjacentes
+        for (int i = lines_ - 1; i <= lines_ + 1; ++i)
         {
-            for (int j = columns - 1; j <= columns + 1; ++j)
+            for (int j = columns_ - 1; j <= columns_ + 1; ++j)
             {
-                floodfill(i, j);
+                floodfill(i,j);
             }
         }
     }
