@@ -18,10 +18,11 @@ struct Game // Struct with all the functions, variables and constructor
     void placeBombs();
     bool hasHitBomb(int enterLine, char enterColumn);
     int adjacentBombs();
+    int getNumberOfAdjacentLivingCell2(int cellRow, int cellCol);
     void flag(int enterLine, char enterColumn);
     bool checkWin();
     char getRevealed(int line, int column);
-    void floodfill(int& lines_, int& columns_);
+    void floodfill(int lines_, int columns_);
 
 };
 
