@@ -248,8 +248,6 @@ int Game::adjacentBombs() // Function to check the adjacent cells
             {
                 board[lines_][columns_] = '0' + bombCount;  // Convert bomb count to character
             }
-
-            totalBombCount += bombCount;
         }
     }
 
@@ -334,7 +332,7 @@ void Game::floodfill(int lines_, int columns_) // Floodfill Function
     int bombesAdj = getNumberOfAdjacentLivingCell2(lines_, columns_);
     if (bombesAdj == 0)
     {
-        // Révélez les cases adjacentes
+        // Reveal adjacent cells
         for (int i = lines_ - 1; i <= lines_ + 1; ++i)
         {
             for (int j = columns_ - 1; j <= columns_ + 1; ++j)
