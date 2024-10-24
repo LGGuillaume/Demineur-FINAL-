@@ -42,7 +42,7 @@ void Game::initializeGame(int& lines_, int& columns_) // Main Game
     case 3:
         lines_ = 10;
         columns_ = 15;
-        numBombs = 1;
+        numBombs = 30;
         break;
     default:
         std::cout << std::endl << "--- BUG ---" << std::endl;
